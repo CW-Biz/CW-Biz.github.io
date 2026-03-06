@@ -1,0 +1,1160 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CCPD | Evidence Portal</title>
+        <style>
+            :root {
+                --glass: rgba(255, 255, 255, 0.1);
+                --glass-border: rgba(255, 255, 255, 0.2);
+                --accent: #00d4ff;
+                --bg-gradient: linear-gradient(
+                    135deg,
+                    #0f0c29,
+                    #302b63,
+                    #24243e
+                );
+                --text: #ffffff;
+                --success: #00ff88;
+                --danger: #ff4d4d;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            }
+
+            body {
+                background: var(--bg-gradient);
+                background-attachment: fixed;
+                color: var(--text);
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow-x: hidden;
+            }
+
+            .glass-panel {
+                background: var(--glass);
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+                border: 1px solid var(--glass-border);
+                border-radius: 15px;
+                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            }
+
+            #login-screen {
+                width: 90%;
+                max-width: 400px;
+                padding: 2rem;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+                letter-spacing: 2px;
+                color: var(--accent);
+            }
+
+            input {
+                width: 100%;
+                padding: 12px;
+                margin: 10px 0;
+                background: rgba(0, 0, 0, 0.2);
+                border: 1px solid var(--glass-border);
+                border-radius: 8px;
+                color: white;
+                outline: none;
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+                margin-top: 10px;
+                background: var(--accent);
+                border: none;
+                border-radius: 8px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+
+            button:hover {
+                opacity: 0.8;
+                transform: translateY(-2px);
+            }
+
+            #dashboard {
+                display: none;
+                width: 95%;
+                max-width: 1000px;
+                height: 92vh;
+                flex-direction: column;
+                padding: 15px;
+                overflow: hidden;
+            }
+
+            .stats-bar {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+                font-size: 0.8rem;
+                margin-bottom: 10px;
+                padding: 5px 10px;
+                flex-wrap: wrap;
+            }
+
+            .tabs {
+                display: flex;
+                gap: 5px;
+                margin-bottom: 15px;
+                overflow-x: auto;
+                flex-shrink: 0;
+            }
+
+            .tab {
+                padding: 10px 15px;
+                cursor: pointer;
+                border-bottom: 2px solid transparent;
+                white-space: nowrap;
+            }
+
+            .tab.active {
+                border-bottom: 2px solid var(--accent);
+                color: var(--accent);
+            }
+
+            .content-area {
+                flex-grow: 1;
+                overflow-y: auto;
+                padding-right: 5px;
+                min-height: 0;
+            }
+
+            .evidence-card {
+                background: rgba(255, 255, 255, 0.05);
+                padding: 18px;
+                margin-bottom: 14px;
+                border-radius: 12px;
+                animation: fadeIn 0.5s ease forwards;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .evidence-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 12px;
+                flex-wrap: wrap;
+            }
+
+            .evidence-title {
+                font-size: 1rem;
+                font-weight: 600;
+                color: #fff;
+            }
+
+            .evidence-actions {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .action-link,
+            .md-content a,
+            .inline-trigger {
+                color: var(--accent);
+                text-decoration: none;
+                font-size: 0.9rem;
+                border: 1px solid var(--accent);
+                padding: 6px 10px;
+                border-radius: 6px;
+                display: inline-block;
+                background: rgba(0, 212, 255, 0.08);
+                cursor: pointer;
+            }
+
+            .action-link:hover,
+            .md-content a:hover,
+            .inline-trigger:hover {
+                background: rgba(0, 212, 255, 0.18);
+            }
+
+            .pdf-viewer {
+                width: 100%;
+                min-height: 520px;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 10px;
+                background: rgba(0, 0, 0, 0.25);
+            }
+
+            .pdf-fallback {
+                margin-top: 10px;
+                font-size: 0.85rem;
+                color: rgba(255, 255, 255, 0.75);
+            }
+
+            .md-content {
+                line-height: 1.65;
+                color: rgba(255, 255, 255, 0.92);
+            }
+
+            .md-content p,
+            .md-content ul,
+            .md-content ol,
+            .md-content blockquote {
+                margin: 0 0 14px 0;
+            }
+
+            .md-content ul,
+            .md-content ol {
+                padding-left: 22px;
+            }
+
+            .md-content code {
+                background: rgba(0, 0, 0, 0.25);
+                padding: 2px 6px;
+                border-radius: 6px;
+            }
+
+            .md-content blockquote {
+                border-left: 3px solid var(--accent);
+                padding-left: 12px;
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .locked-msg {
+                text-align: center;
+                margin-top: 50px;
+                color: rgba(255, 255, 255, 0.4);
+            }
+
+            .analysis-box {
+                text-align: center;
+                padding: 20px;
+            }
+
+            .helper-note {
+                font-size: 0.8rem;
+                color: rgba(255, 255, 255, 0.7);
+                margin-top: 8px;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .evidence-header {
+                cursor: pointer; /* Makes it obvious you can click it */
+                user-select: none;
+            }
+
+            .evidence-body {
+                transition: max-height 0.3s ease-out;
+                overflow: hidden;
+            }
+
+            .evidence-body.collapsed {
+                display: none; /* Simple toggle */
+            }
+
+            .toggle-icon {
+                font-size: 0.8rem;
+                margin-right: 10px;
+                transition: transform 0.3s;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="login-screen" class="glass-panel">
+            <h1>CCPD ACCESS</h1>
+            <input
+                type="text"
+                id="badge"
+                placeholder="BADGE NUMBER"
+                onkeypress="e_movedown(event)"
+            />
+            <input
+                type="text"
+                id="casefile"
+                placeholder="CASE FILE NUMBER"
+                onkeypress="e_login(event)"
+            />
+            <button onclick="login()">AUTHENTICATE</button>
+        </div>
+
+        <div id="dashboard" class="glass-panel">
+            <div class="stats-bar">
+                <span>OFFICER: <span id="display-badge"></span></span>
+                <span>POINTS: <span id="points">0</span></span>
+                <span>SESSION: <span id="timer">00:00</span></span>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('Reports')">
+                    Reports
+                </div>
+                <div class="tab" onclick="showTab('Persons')">Persons</div>
+                <div class="tab" onclick="showTab('Evidence')">Evidence</div>
+                <div class="tab" onclick="showTab('Analysis')">Analysis</div>
+            </div>
+
+            <div id="content" class="content-area"></div>
+        </div>
+
+        <script>
+            // --- CONFIGURATION: SET UP YOUR EVIDENCE HERE ---
+            // These are all the PDF documents for the game
+            const evidenceRegistry = [
+                {
+                    id: "detective_request",
+                    keywords: ["invite"],
+                    title: "Crime Scene Initial Report",
+                    file: "Evidence/detective_request.pdf",
+                    category: "Reports",
+                    type: "pdf",
+                    points: 10,
+                    requiredId: null,
+                },
+                {
+                    id: "case_brief",
+                    keywords: ["147-XA"],
+                    title: "Case Brief",
+                    file: "Evidence/case_brief.pdf",
+                    category: "Reports",
+                    type: "pdf",
+                    points: 30,
+                    requiredId: null,
+                },
+                {
+                    id: "young_ceo_news",
+                    keywords: ["147-XA"],
+                    title: "Newspaper: Youngest CEO",
+                    file: "Evidence/young_ceo_news.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "city_map",
+                    keywords: ["map"],
+                    title: "Map of Capeville City - Case Area",
+                    file: "Evidence/city_map.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "mystery_note",
+                    keywords: ["note"],
+                    title: "Mystery Note",
+                    file: "Evidence/mystery_note.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                    prompt: "A small note found at the crime scene - unknown author.",
+                },
+                {
+                    id: "victim_file",
+                    keywords: ["Victim"],
+                    title: "Victim File - Jackson Lake",
+                    file: "Evidence/victim_file.pdf",
+                    category: "Reports",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "person_diana",
+                    keywords: ["Diana"],
+                    title: "Personnel File - Diana Lake",
+                    file: "Evidence/person_diana.pdf",
+                    category: "Persons",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "person_albert",
+                    keywords: ["Albert"],
+                    title: "Personnel File - Albert Longman",
+                    file: "Evidence/person_albert.pdf",
+                    category: "Persons",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "person_mark",
+                    keywords: ["Mark"],
+                    title: "Personnel File - Mark Neils",
+                    file: "Evidence/person_mark.pdf",
+                    category: "Reports",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "cafe_slip",
+                    keywords: ["Cafe", "Slip", "Slips"],
+                    title: "Capeville Cafe Till Slips",
+                    file: "Evidence/cafe_slip.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "victim_diary",
+                    keywords: ["diary"],
+                    title: "Diary of Jackson Lake - Extract",
+                    file: "Evidence/victim_diary.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "person_sarah",
+                    keywords: ["Sarah"],
+                    title: "Personnel File - Sarah Moses",
+                    file: "Evidence/person_sarah.pdf",
+                    category: "Persons",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "bank_statement",
+                    keywords: [
+                        "Finances",
+                        "Finance",
+                        "money problem",
+                        "money problems",
+                    ],
+                    title: "Brighthouse Industries - Financial Overview",
+                    file: "Evidence/bank_statement.pdf",
+                    category: "Reports",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "board_email",
+                    keywords: [
+                        "board",
+                        "shareholder",
+                        "shareholders",
+                        "share holder",
+                        "share holders",
+                    ],
+                    title: "Board of Shareholders - Email to Jackson",
+                    file: "Evidence/board_email.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "person_josh",
+                    keywords: ["Josh"],
+                    title: "Personnel File - Josh Moses",
+                    file: "Evidence/person_josh.pdf",
+                    category: "Persons",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "invoice_diana",
+                    keywords: ["divorce"],
+                    title: "Attorney Invoice - Diana",
+                    file: "Evidence/invoice_diana.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "bhi_success_news",
+                    keywords: [
+                        "success",
+                        "Black Ice",
+                        "cooling",
+                        "cooling system",
+                        "cooling systems",
+                    ],
+                    title: "Newspaper: Brighthouse Bright Future",
+                    file: "Evidence/bhi_success_news.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "military_albert_email",
+                    keywords: ["military"],
+                    title: "Email: Military Tender",
+                    file: "Evidence/military_albert_email.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "josh_jackson_email",
+                    keywords: ["cheating", "cheat"],
+                    title: "Email: <Josh> I KNOW",
+                    file: "Evidence/josh_jackson_email.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "diana_jackson_email",
+                    keywords: ["blackmail"],
+                    title: "Email: <Diana> Expensive Silence",
+                    file: "Evidence/diana_jackson_email.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "albert_jackson_email",
+                    keywords: ["feud", "beef"],
+                    title: "Email Chain: <Albert> <Jackson> Request Denied",
+                    file: "Evidence/albert_jackson_email.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "sarah_jackson_chats",
+                    keywords: [
+                        "chat",
+                        "chat log",
+                        "chat logs",
+                        "whatsapps",
+                        "messages",
+                        "secret messages",
+                    ],
+                    title: "WhatsUpp Chat: <Sarah> <Jackson>",
+                    file: "Evidence/sarah_jackson_chats.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "albert_military_email",
+                    keywords: ["aegis"],
+                    title: "Email: Project Aegis",
+                    file: "Evidence/albert_military_email.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "josh_resignation",
+                    keywords: ["resign", "resignation"],
+                    title: "Email: Resignation",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 20,
+                    requiredId: null,
+                },
+                {
+                    id: "case_closed",
+                    keywords: ["Killer is Mark Neils"],
+                    title: "Case Closed",
+                    category: "Reports",
+                    type: "pdf",
+                    points: 100,
+                    requiredId: null,
+                },
+                //these are all the markdown documents for the game
+                {
+                    id: "test",
+                    keywords: ["test"],
+                    title: "Test Document",
+                    category: "Reports",
+                    type: "markdown",
+                    points: 5000,
+                    requiredId: null,
+                    markdown: `## Test Document\n\nHi. You seem to have stumbled on a test document... **wow, so random**.\n\nYeah, anyway... You're not supposed to be here.\n\n[Surprise](modal:test_modal)\n\nGo back to the [instructions](pdf:detective_request) lol.`,
+                },
+                //these are all the modal prompts for the game
+                {
+                    id: "test_modal",
+                    keywords: ["waduhek"],
+                    title: "Test Modal",
+                    type: "markdown",
+                    prompt: "What is going on dude?",
+                    unlocksId: "case_closed",
+                },
+            ];
+
+            const authorizedBadges = [
+                "101",
+                "102",
+                "103",
+                "201",
+                "202",
+                "203",
+                "301",
+                "302",
+                "303",
+            ];
+
+            let lastAnalysisFeedback = { text: "", isSuccess: true };
+            let unlockedIds = [];
+            let score = 0;
+            let startTime;
+            let currentTab = "Reports";
+            let activeModalId = null;
+
+            function login() {
+                const badge = document.getElementById("badge").value;
+                const casefile = (
+                    document.getElementById("casefile")?.value || ""
+                )
+                    .toUpperCase()
+                    .trim();
+
+                if (authorizedBadges.includes(badge) && casefile === "147-XA") {
+                    document.getElementById("login-screen").style.display =
+                        "none";
+                    document.getElementById("dashboard").style.display = "flex";
+                    document.getElementById("display-badge").innerText = badge;
+                    startTimer();
+                    renderContent();
+                } else {
+                    alert("ACCESS DENIED: INVALID BADGE OR CASE FILE NUMBER.");
+                }
+            }
+
+            function e_login(e) {
+                if (e.key === "Enter") {
+                    login();
+                }
+            }
+
+            function e_movedown(e) {
+                if (e.key === "Enter") {
+                    document.getElementById("casefile").focus();
+                }
+            }
+
+            function startTimer() {
+                startTime = Date.now();
+                setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    const mins = Math.floor(elapsed / 60)
+                        .toString()
+                        .padStart(2, "0");
+                    const secs = (elapsed % 60).toString().padStart(2, "0");
+                    document.getElementById("timer").innerText =
+                        `${mins}:${secs}`;
+                }, 1000);
+            }
+
+            function showTab(tabName) {
+                currentTab = tabName;
+                lastAnalysisFeedback = { text: "", isSuccess: true };
+                document.querySelectorAll(".tab").forEach((t) => {
+                    t.classList.toggle("active", t.innerText === tabName);
+                });
+                renderContent();
+            }
+
+            function renderContent() {
+                const container = document.getElementById("content");
+                container.innerHTML = "";
+
+                if (currentTab === "Analysis") {
+                    container.innerHTML = `
+                    <div class="analysis-box">
+                        <h3>CRYPTO-ANALYSIS TERMINAL</h3>
+                        <p style="font-size:0.8rem; color:var(--accent); margin-bottom:15px;">Input keywords to decrypt files</p>
+                        <input type="text" id="searchBar" placeholder="Search Database..." onkeypress="handleSearch(event)">
+                        <button onclick="processSearch()">EXECUTE SEARCH</button>
+                        <div id="search-feedback" style="
+                            margin-top: 20px;
+                            font-weight: bold;
+                            min-height: 24px;
+                            color: ${lastAnalysisFeedback.isSuccess ? "var(--success)" : "var(--danger)"};
+                            text-shadow: ${lastAnalysisFeedback.isSuccess ? "0 0 10px rgba(0,255,136,0.5)" : "0 0 10px rgba(255,77,77,0.5)"};
+                        ">
+                            ${lastAnalysisFeedback.text}
+                        </div>
+                    </div>
+                `;
+                    return;
+                }
+
+                const items = evidenceRegistry.filter(
+                    (e) =>
+                        e.category === currentTab && unlockedIds.includes(e.id),
+                );
+
+                if (items.length === 0) {
+                    container.innerHTML = `<div class="locked-msg">No data accessible in this sector.</div>`;
+                } else {
+                    items.forEach((item) => {
+                        const card = document.createElement("div");
+                        card.className = "evidence-card";
+                        card.innerHTML = renderEvidenceCard(item);
+                        container.appendChild(card);
+                    });
+                }
+            }
+
+            function renderEvidenceCard(item) {
+                const contentHtml =
+                    item.type === "markdown"
+                        ? `<div class="md-content">${renderMarkdown(item.markdown || "")}</div>`
+                        : renderPdfViewer(item);
+
+                const actions = [];
+                if (item.type === "pdf" && item.file) {
+                    actions.push(
+                        `<a class="action-link" href="${item.file}" target="_blank" rel="noopener">OPEN IN NEW TAB</a>`,
+                    );
+                }
+
+                // Changes: Added display:none to evidence-body and set icon to ▶
+                return `
+                <div class="evidence-header" data-id="${item.id}" onclick="toggleCard(this)">
+                    <div class="evidence-title"><span class="toggle-icon">▶</span> ${escapeHtml(item.title)}</div>
+                    <div class="evidence-actions" onclick="event.stopPropagation()">${actions.join("")}</div>
+                </div>
+                <div class="evidence-body" style="display: none; margin-top: 15px;">
+                    ${contentHtml}
+                </div>
+            `;
+            }
+
+            function renderPdfViewer(item) {
+                // We use data-src instead of src to prevent loading while hidden
+                return `
+                <iframe class="pdf-viewer"
+                        data-src="${item.file}#view=FitW"
+                        src="about:blank"
+                        title="${escapeHtml(item.title)}"></iframe>
+                <div class="pdf-fallback">If preview fails, use <strong>OPEN IN NEW TAB</strong>.</div>
+            `;
+            }
+
+            function handleSearch(e) {
+                if (e.key === "Enter") processSearch();
+            }
+
+            function processSearch() {
+                const searchBar = document.getElementById("searchBar");
+                const query = (searchBar?.value || "").toLowerCase().trim();
+
+                const matches = evidenceRegistry.filter((e) =>
+                    isKeywordMatch(query, e.keywords),
+                );
+
+                if (!query) {
+                    lastAnalysisFeedback = {
+                        text: "ERROR: INPUT REQUIRED",
+                        isSuccess: false,
+                    };
+                } else if (matches.length === 0) {
+                    lastAnalysisFeedback = {
+                        text: "ACCESS DENIED: KEYWORDS NOT RECOGNIZED",
+                        isSuccess: false,
+                    };
+                } else {
+                    let unlockCount = 0;
+                    let requirementFailed = false;
+
+                    matches.forEach((found) => {
+                        if (unlockedIds.includes(found.id)) {
+                            // Already unlocked, skip
+                        } else if (
+                            found.requiredId &&
+                            !unlockedIds.includes(found.requiredId)
+                        ) {
+                            requirementFailed = true;
+                        } else {
+                            unlockEvidence(found);
+                            unlockCount++;
+                        }
+                    });
+
+                    if (unlockCount > 0) {
+                        lastAnalysisFeedback = {
+                            text: `SUCCESS: ${unlockCount} FILE(S) DECRYPTED`,
+                            isSuccess: true,
+                        };
+                    } else if (requirementFailed) {
+                        lastAnalysisFeedback = {
+                            text: "ENCRYPTION ERROR: PREVIOUS LINK IN CHAIN REQUIRED",
+                            isSuccess: false,
+                        };
+                    } else {
+                        lastAnalysisFeedback = {
+                            text: "NOTICE: ALL MATCHING FILES ALREADY DECRYPTED",
+                            isSuccess: true,
+                        };
+                    }
+                }
+
+                renderContent();
+                if (document.getElementById("searchBar"))
+                    document.getElementById("searchBar").focus();
+            }
+
+            function unlockEvidence(item) {
+                if (!unlockedIds.includes(item.id)) {
+                    unlockedIds.push(item.id);
+                    score += item.points || 0;
+                    document.getElementById("points").innerText = score;
+                }
+            }
+
+            //function isKeywordMatch(input, target) {
+            //    if (!input || !target) return false;
+            //    const inputWords = input.split(/\s+/);
+            //    const targetWords = target.toLowerCase().split(/\s+/);
+            //    return targetWords.every((word) => inputWords.includes(word));
+            //}
+
+            function isKeywordMatch(userInput, keywordArray) {
+                if (!userInput || !keywordArray) return false;
+
+                // Clean the user input into individual words
+                const inputWords = userInput.toLowerCase().split(/\s+/);
+
+                // .some() returns true if at least one element in the array matches the condition
+                return keywordArray.some((keywordPhrase) => {
+                    const phraseWords = keywordPhrase
+                        .toLowerCase()
+                        .split(/\s+/);
+
+                    // This ensures the user provided ALL words within a specific phrase
+                    // e.g., if a keyword is "blue bird", they must type both words
+                    return phraseWords.every((word) =>
+                        inputWords.includes(word),
+                    );
+                });
+            }
+
+            function triggerDiscoveryModal(evidenceId) {
+                const item = evidenceRegistry.find((e) => e.id === evidenceId);
+                if (!item) return;
+
+                activeModalId = evidenceId;
+                document.getElementById("modal-title").innerText =
+                    "DISCOVERY: " + item.title.toUpperCase();
+                document.getElementById("modal-prompt").innerText =
+                    item.prompt ||
+                    "Enter the correct code to unlock this item.";
+                document.getElementById("modal-input").value = "";
+                document.getElementById("modal-feedback").innerText = "";
+                document.getElementById("modal-overlay").style.display = "flex";
+            }
+
+            function closeDiscoveryModal() {
+                document.getElementById("modal-overlay").style.display = "none";
+                activeModalId = null;
+            }
+
+            function handleModalKey(e) {
+                if (e.key === "Enter") submitModalSearch();
+            }
+
+            function submitModalSearch() {
+                const query = document
+                    .getElementById("modal-input")
+                    .value.toLowerCase()
+                    .trim();
+                const feedback = document.getElementById("modal-feedback");
+                const item = evidenceRegistry.find(
+                    (e) => e.id === activeModalId,
+                );
+
+                if (!item) return;
+
+                if (isKeywordMatch(query, item.keywords)) {
+                    unlockEvidence(item);
+
+                    if (item.unlocksId) {
+                        const rewardItem = evidenceRegistry.find(
+                            (e) => e.id === item.unlocksId,
+                        );
+                        if (rewardItem) unlockEvidence(rewardItem);
+                    }
+
+                    feedback.style.color = "var(--success)";
+                    feedback.innerText =
+                        "ACCESS GRANTED. NEW EVIDENCE DECRYPTED.";
+
+                    setTimeout(() => {
+                        closeDiscoveryModal();
+                        renderContent();
+                    }, 1500);
+                } else {
+                    feedback.style.color = "var(--danger)";
+                    feedback.innerText = "ACCESS DENIED: INVALID CREDENTIALS";
+                }
+            }
+
+            function renderMarkdown(markdown) {
+                if (!markdown) return "";
+
+                let html = escapeHtml(markdown);
+
+                html = html.replace(/^### (.*)$/gm, "<h3>$1</h3>");
+                html = html.replace(/^## (.*)$/gm, "<h2>$1</h2>");
+                html = html.replace(/^# (.*)$/gm, "<h1>$1</h1>");
+                html = html.replace(
+                    /^> (.*)$/gm,
+                    "<blockquote>$1</blockquote>",
+                );
+                html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
+                html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+                html = html.replace(
+                    /\[([^\]]+)\]\(([^)]+)\)/g,
+                    (match, text, target) => {
+                        if (target.startsWith("modal:")) {
+                            const id = target.substring("modal:".length);
+                            return `<a href="#" data-modal-id="${escapeHtmlAttr(id)}">${text}</a>`;
+                        }
+                        if (target.startsWith("pdf:")) {
+                            const id = target.substring("pdf:".length);
+                            return `<a href="#" data-pdf-id="${escapeHtmlAttr(id)}">${text}</a>`;
+                        }
+                        return `<a href="${escapeHtmlAttr(target)}" target="_blank" rel="noopener">${text}</a>`;
+                    },
+                );
+
+                const lines = html.split("\n");
+                let inList = false;
+                const output = [];
+
+                for (const line of lines) {
+                    if (/^\s*[-*]\s+/.test(line)) {
+                        if (!inList) {
+                            output.push("<ul>");
+                            inList = true;
+                        }
+                        output.push(
+                            `<li>${line.replace(/^\s*[-*]\s+/, "")}</li>`,
+                        );
+                    } else {
+                        if (inList) {
+                            output.push("</ul>");
+                            inList = false;
+                        }
+
+                        if (!line.trim()) {
+                            continue;
+                        }
+
+                        if (
+                            /^<h[1-3]>/.test(line) ||
+                            /^<blockquote>/.test(line) ||
+                            /^<ul>/.test(line) ||
+                            /^<\/ul>/.test(line)
+                        ) {
+                            output.push(line);
+                        } else {
+                            output.push(`<p>${line}</p>`);
+                        }
+                    }
+                }
+
+                if (inList) output.push("</ul>");
+                return output.join("");
+            }
+
+            function openPdfEvidence(evidenceId) {
+                const item = evidenceRegistry.find((e) => e.id === evidenceId);
+                if (!item) return;
+
+                if (item.category !== currentTab) {
+                    showTab(item.category);
+                }
+
+                const targetHeader = document.querySelector(
+                    `.evidence-header[data-id="${evidenceId}"]`,
+                );
+
+                if (targetHeader) {
+                    const body = targetHeader.nextElementSibling;
+
+                    if (body.style.display === "none") {
+                        toggleCard(targetHeader);
+                    }
+
+                    targetHeader.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                } else {
+                    console.warn("Evidence card not found. Is it unlocked?");
+                }
+            }
+
+            function escapeHtml(value) {
+                return String(value)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#39;");
+            }
+
+            function escapeHtmlAttr(value) {
+                return escapeHtml(value);
+            }
+
+            document.addEventListener("click", function (event) {
+                const modalLink = event.target.closest("[data-modal-id]");
+                if (modalLink) {
+                    event.preventDefault();
+                    triggerDiscoveryModal(
+                        modalLink.getAttribute("data-modal-id"),
+                    );
+                    return;
+                }
+
+                const pdfLink = event.target.closest("[data-pdf-id]");
+                if (pdfLink) {
+                    event.preventDefault();
+                    openPdfEvidence(pdfLink.getAttribute("data-pdf-id"));
+                }
+            });
+
+            function toggleCard(headerElement) {
+                const body = headerElement.nextElementSibling;
+                const icon = headerElement.querySelector(".toggle-icon");
+                const iframe = body.querySelector("iframe");
+
+                if (body.style.display === "none") {
+                    // 1. Show the container first
+                    body.style.display = "block";
+                    icon.innerText = "▼";
+
+                    // 2. Load the PDF only if it hasn't been loaded yet
+                    // This solves the zoom issue and the rendering 'fail' cycle
+                    if (iframe && iframe.src === "about:blank") {
+                        const realSrc = iframe.getAttribute("data-src");
+                        iframe.src = realSrc;
+                    }
+                } else {
+                    // Collapse the card
+                    body.style.display = "none";
+                    icon.innerText = "▶";
+                }
+            }
+        </script>
+
+        <div
+            id="modal-overlay"
+            style="
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                justify-content: center;
+                align-items: center;
+            "
+        >
+            <div
+                class="glass-panel"
+                style="
+                    width: 90%;
+                    max-width: 400px;
+                    padding: 2rem;
+                    text-align: center;
+                    position: relative;
+                "
+            >
+                <button
+                    onclick="closeDiscoveryModal()"
+                    style="
+                        position: absolute;
+                        top: 10px;
+                        right: 15px;
+                        width: auto;
+                        background: none;
+                        color: white;
+                        font-size: 1.2rem;
+                    "
+                >
+                    ✕
+                </button>
+                <h2
+                    id="modal-title"
+                    style="
+                        color: var(--accent);
+                        font-size: 1.1rem;
+                        margin-bottom: 10px;
+                    "
+                >
+                    ENCRYPTED DATA FOUND
+                </h2>
+                <p
+                    id="modal-prompt"
+                    style="
+                        font-size: 0.9rem;
+                        margin-bottom: 20px;
+                        color: rgba(255, 255, 255, 0.8);
+                    "
+                ></p>
+
+                <input
+                    type="text"
+                    id="modal-input"
+                    placeholder="Enter override code..."
+                    onkeypress="handleModalKey(event)"
+                />
+                <button onclick="submitModalSearch()" id="modal-submit-btn">
+                    ACCESS FILE
+                </button>
+
+                <div
+                    id="modal-feedback"
+                    style="
+                        margin-top: 15px;
+                        font-weight: bold;
+                        font-size: 0.8rem;
+                        min-height: 20px;
+                    "
+                ></div>
+            </div>
+        </div>
+    </body>
+</html>
