@@ -127,6 +127,34 @@
                 cursor: pointer;
                 border-bottom: 2px solid transparent;
                 white-space: nowrap;
+                position: relative;
+            }
+
+            .badge {
+                position: absolute;
+                top: -2px;
+                right: -8px;
+                background: var(--accent);
+                color: #000;
+                font-size: 0.7rem;
+                font-weight: bold;
+                padding: 2px 6px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px var(--accent);
+            }
+
+            /* New Evidence Highlight */
+            .evidence-card.new-item {
+                border: 1px solid var(--accent);
+                box-shadow: inset 0 0 15px rgba(0, 212, 255, 0.15);
+            }
+
+            .new-tag {
+                color: var(--accent);
+                font-size: 0.7rem;
+                font-weight: bold;
+                margin-right: 10px;
+                text-transform: uppercase;
             }
 
             .tab.active {
@@ -304,8 +332,12 @@
         <div id="dashboard" class="glass-panel">
             <div class="stats-bar">
                 <span>OFFICER: <span id="display-badge"></span></span>
-                <span>POINTS: <span id="points">0</span></span>
-                <span>SESSION: <span id="timer">00:00</span></span>
+                <span style="display: none"
+                    >POINTS: <span id="points">0</span></span
+                >
+                <span style="display: none"
+                    >SESSION: <span id="timer">00:00</span></span
+                >
             </div>
 
             <div class="tabs">
@@ -356,7 +388,7 @@
                 },
                 {
                     id: "city_map",
-                    keywords: ["map"],
+                    keywords: ["147-XA"],
                     title: "Map of Capeville City - Case Area",
                     file: "Evidence/city_map.pdf",
                     category: "Evidence",
@@ -366,18 +398,26 @@
                 },
                 {
                     id: "mystery_note",
-                    keywords: ["note"],
+                    keywords: [
+                        "affair",
+                        "cheating",
+                        "adultery",
+                        "cheat",
+                        "infidelity",
+                        "mistress",
+                        "lover",
+                    ],
                     title: "Mystery Note",
                     file: "Evidence/mystery_note.pdf",
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "cafe_slip",
                     prompt: "A small note found at the crime scene - unknown author.",
                 },
                 {
                     id: "victim_file",
-                    keywords: ["Victim"],
+                    keywords: ["147-XA"],
                     title: "Victim File - Jackson Lake",
                     file: "Evidence/victim_file.pdf",
                     category: "Reports",
@@ -387,7 +427,7 @@
                 },
                 {
                     id: "person_diana",
-                    keywords: ["Diana"],
+                    keywords: ["147-XA"],
                     title: "Personnel File - Diana Lake",
                     file: "Evidence/person_diana.pdf",
                     category: "Persons",
@@ -397,7 +437,7 @@
                 },
                 {
                     id: "person_albert",
-                    keywords: ["Albert"],
+                    keywords: ["147-XA"],
                     title: "Personnel File - Albert Longman",
                     file: "Evidence/person_albert.pdf",
                     category: "Persons",
@@ -407,7 +447,7 @@
                 },
                 {
                     id: "person_mark",
-                    keywords: ["Mark"],
+                    keywords: ["147-XA"],
                     title: "Personnel File - Mark Neils",
                     file: "Evidence/person_mark.pdf",
                     category: "Persons",
@@ -423,27 +463,90 @@
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "city_map",
                 },
                 {
                     id: "victim_diary",
-                    keywords: ["diary"],
+                    keywords: [
+                        "suicide",
+                        "self-harm",
+                        "selfharm",
+                        "self harm",
+                        "suicidal",
+                    ],
                     title: "Diary of Jackson Lake - Extract",
                     file: "Evidence/victim_diary.pdf",
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "person_albert",
                 },
                 {
                     id: "person_sarah",
-                    keywords: ["Sarah"],
+                    keywords: [
+                        "2 coffees",
+                        "two coffees",
+                        "2 coffee",
+                        "two coffee",
+                        "2xCoffee",
+                        "2 x Coffee",
+                        "2x Coffee",
+                        "2 xCoffee",
+                        "2xCoffees",
+                        "2 x Coffees",
+                        "2x Coffees",
+                        "2 xCoffees",
+                        "2 Capp",
+                        "2 Cap",
+                        "2 Cappuccino",
+                        "2 cappuccinos",
+                        "two cappuccino",
+                        "two cappuccinos",
+                        "2xCap",
+                        "2x Cap",
+                        "2 xCap",
+                        "2xCapp",
+                        "2x Capp",
+                        "2 xCapp",
+                        "CAPx2",
+                        "CAP x 2",
+                        "CAPx 2",
+                        "CAP x2",
+                        "CAPPx2",
+                        "CAPP x 2",
+                        "CAPPx 2",
+                        "CAPP x2",
+                        "CAP TALL x2",
+                        "Coffee for two",
+                        "Coffees for two",
+                        "cappuccino for two",
+                        "cappuccinos for two",
+                        "cappuccino for 2",
+                        "cappuccinos for 2",
+                        "x2 Coffee",
+                        "x2 Coffees",
+                        "x 2 Coffee",
+                        "x 2 Coffees",
+                        "x2Coffee",
+                        "x2 cap",
+                        "x2 capp",
+                        "x2 cap tall",
+                        "x2 capp tall",
+                        "two cap",
+                        "two capp",
+                        "two cap tall",
+                        "two capp tall",
+                        "2 cap tall",
+                        "2 capp tall",
+                        "divorce attorney",
+                        "divorce lawyer",
+                    ],
                     title: "Personnel File - Sarah Moses",
                     file: "Evidence/person_sarah.pdf",
                     category: "Persons",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "cafe_slip",
                 },
                 {
                     id: "bank_statement",
@@ -452,13 +555,15 @@
                         "Finance",
                         "money problem",
                         "money problems",
+                        "divorce attorney",
+                        "divorce lawyer",
                     ],
                     title: "Brighthouse Industries - Financial Overview",
                     file: "Evidence/bank_statement.pdf",
                     category: "Reports",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "cafe_slip",
                 },
                 {
                     id: "board_email",
@@ -468,23 +573,27 @@
                         "shareholders",
                         "share holder",
                         "share holders",
+                        "investor email",
+                        "investors email",
+                        "board email",
+                        "albert base",
                     ],
                     title: "Board of Shareholders - Email to Jackson",
                     file: "Evidence/board_email.pdf",
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "victim_diary",
                 },
                 {
                     id: "person_josh",
-                    keywords: ["Josh"],
+                    keywords: ["spouse", "sarah spouse"],
                     title: "Personnel File - Josh Moses",
                     file: "Evidence/person_josh.pdf",
                     category: "Persons",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "person_sarah",
                 },
                 {
                     id: "invoice_diana",
@@ -494,43 +603,48 @@
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "bank_statement",
                 },
                 {
                     id: "bhi_success_news",
                     keywords: [
-                        "success",
-                        "Black Ice",
-                        "cooling",
-                        "cooling system",
-                        "cooling systems",
+                        "military email",
+                        "defence contract",
+                        "military contract",
+                        "army contract",
                     ],
                     title: "Newspaper: Brighthouse Bright Future",
                     file: "Evidence/bhi_success_news.pdf",
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "board_email",
                 },
                 {
                     id: "military_albert_email",
-                    keywords: ["military"],
+                    keywords: [
+                        "military email",
+                        "defence contract",
+                        "military contract",
+                        "army contract",
+                        "albert base",
+                    ],
                     title: "Email: Military Tender",
                     file: "Evidence/military_albert_email.pdf",
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "board_email",
                 },
                 {
                     id: "josh_jackson_email",
-                    keywords: ["cheating", "cheat"],
+                    keywords: ["josh email", "josh's email"],
                     title: "Email: <Josh> I KNOW",
                     file: "Evidence/josh_jackson_email.pdf",
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "invoice_diana",
                 },
                 {
                     id: "diana_jackson_email",
@@ -540,17 +654,17 @@
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "invoice_diana",
                 },
                 {
                     id: "albert_jackson_email",
-                    keywords: ["feud", "beef"],
+                    keywords: ["kinetic strike system"],
                     title: "Email Chain: <Albert> <Jackson> Request Denied",
                     file: "Evidence/albert_jackson_email.pdf",
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "military_albert_email",
                 },
                 {
                     id: "sarah_jackson_chats",
@@ -567,17 +681,17 @@
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "diana_jackson_email",
                 },
                 {
                     id: "albert_military_email",
-                    keywords: ["aegis"],
+                    keywords: ["black ice", "aegis"],
                     title: "Email: Project Aegis",
                     file: "Evidence/albert_military_email.pdf",
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
-                    requiredId: null,
+                    requiredId: "albert_jackson_email",
                 },
                 {
                     id: "josh_resignation",
@@ -587,6 +701,16 @@
                     category: "Evidence",
                     type: "pdf",
                     points: 20,
+                    requiredId: "sarah_jackson_chats",
+                },
+                {
+                    id: "whiteboard",
+                    keywords: ["whiteboard"],
+                    title: "Picture of Whiteboard",
+                    file: "Evidence/whiteboard.pdf",
+                    category: "Evidence",
+                    type: "pdf",
+                    points: 100,
                     requiredId: null,
                 },
                 {
@@ -597,7 +721,7 @@
                     category: "Reports",
                     type: "pdf",
                     points: 100,
-                    requiredId: null,
+                    requiredId: "whiteboard",
                 },
                 //these are all the markdown documents for the game
                 {
@@ -610,6 +734,76 @@
                     requiredId: null,
                     markdown: `## Test Document\n\nHi. You seem to have stumbled on a test document... **wow, so random**.\n\nYeah, anyway... You're not supposed to be here.\n\n[Surprise](modal:test_modal)\n\nGo back to the [instructions](pdf:detective_request) lol.`,
                 },
+                {
+                    id: "cheat_lookup",
+                    keywords: [
+                        "affair",
+                        "cheating",
+                        "adultery",
+                        "cheat",
+                        "infidelity",
+                        "mistress",
+                        "lover",
+                        "divorce lawyer",
+                        "divorce attorney",
+                    ],
+                    title: "[Request] - Finance Inquest",
+                    category: "Reports",
+                    type: "markdown",
+                    points: 20,
+                    requiredId: "person_sarah",
+                    markdown: `## New Theory - Cheating\n\nYour investigation has revealed a potential affair, and you've been cleared\n\nto [launch an inquest](modal:finance_inquest) into Jackson and BHI's financials.\n\nNB: Remember to type 'finance review' once you've gone over the finances!`,
+                },
+                {
+                    id: "diana_lookup",
+                    keywords: ["finance review"],
+                    title: "[Request] - Finance Review",
+                    category: "Reports",
+                    type: "markdown",
+                    points: 20,
+                    requiredId: "bank_statement",
+                    markdown: `## Line of Reason\n\nYour theory may have just gained some ground:\n\n[Finance Review](modal:divorce_lawyer)`,
+                },
+                {
+                    id: "email_lookup",
+                    keywords: ["josh email", "josh's email"],
+                    title: "[Action] - Jackson Email Review",
+                    category: "Reports",
+                    type: "markdown",
+                    points: 20,
+                    requiredId: "invoice_diana",
+                    markdown: `## Email Review\n\nYour search into Jackson's Emails flagged another [email](modal:josh_email_prompt) for your attention.\n\nWe have sent the email to you via printer\n\nCollect the email and add it to the system using it's code.`,
+                },
+                {
+                    id: "chat_lookup",
+                    keywords: ["josh email", "josh's email"],
+                    title: "[Action] - Jackson Phone Review",
+                    category: "Reports",
+                    type: "markdown",
+                    points: 20,
+                    requiredId: "invoice_diana",
+                    markdown: `## Phone Review\n\nWe've been cleared with a court order to investigate Jackson's phone\n\nFind his phone and [Enter the Code](modal:jackson_phone) to download it's contents for investigation.`,
+                },
+                {
+                    id: "josh_review",
+                    keywords: ["josh email, josh's email"],
+                    title: "[Review] - Josh Re-Interview",
+                    category: "Reports",
+                    type: "markdown",
+                    points: 20,
+                    requiredId: "invoice_diana",
+                    markdown: `## Josh Re-Interview\n\nGiven Josh's email, it was imperative to re-interview him\n\nAnd in doing so, he provided [new evidence](unlock:josh_resignation) that might help.`,
+                },
+                {
+                    id: "project_review",
+                    keywords: ["black ice", "aegis"],
+                    title: "[Action] - BHI Projects Review",
+                    category: "Reports",
+                    type: "markdown",
+                    points: 20,
+                    requiredId: "albert_jackson_email",
+                    markdown: `## Brighthouse Projects\n\nWith the reviewing of the evidence - there seems to be a lot of trouble surrounding the company's projects\n\nIn revewing the project schematics, we discovered something interesting\n\nWe sent the picture to your printer for you to [log](modal:whiteboard_log)`,
+                },
                 //these are all the modal prompts for the game
                 {
                     id: "test_modal",
@@ -618,6 +812,46 @@
                     type: "markdown",
                     prompt: "What is going on dude?",
                     unlocksId: "case_closed",
+                },
+                {
+                    id: "finance_inquest",
+                    keywords: ["proceed"],
+                    title: "Finance Inquest",
+                    prompt: "Type 'proceed' - without the quotes - to launch the investigation.",
+                    unlocksId: "bank_statement",
+                },
+                {
+                    id: "divorce_lawyer",
+                    keywords: [
+                        "divorce lawyer",
+                        "divorce attorney",
+                        "lawyer",
+                        "attorney",
+                    ],
+                    title: "Finance Review",
+                    prompt: "Something specific in the finance statements support your cheating theory. What is it?",
+                    unlocksId: "invoice_diana",
+                },
+                {
+                    id: "josh_email_prompt",
+                    keywords: ["BME1"],
+                    title: "Email Review",
+                    prompt: "Type in the email code to add it to the system",
+                    unlocksId: "diana_jackson_email",
+                },
+                {
+                    id: "jackson_phone",
+                    keywords: ["JP007"],
+                    title: "Phone Download",
+                    prompt: "Enter the code to link the phone and download it's contents",
+                    unlocksId: "sarah_jackson_chats",
+                },
+                {
+                    id: "whiteboard_log",
+                    keywords: ["WB553"],
+                    title: "Project Schematics",
+                    prompt: "Enter the image code to download the new evidence to the portal",
+                    unlocksId: "whiteboard",
                 },
             ];
 
@@ -633,6 +867,7 @@
                 "303",
             ];
 
+            let viewedIds = [];
             let lastAnalysisFeedback = { text: "", isSuccess: true };
             let unlockedIds = [];
             let score = 0;
@@ -698,24 +933,41 @@
                 const container = document.getElementById("content");
                 container.innerHTML = "";
 
+                // Update Tab Badges
+                document.querySelectorAll(".tab").forEach((tab) => {
+                    const category = tab.innerText
+                        .replace(/\s?\(\d+\)/, "")
+                        .trim();
+                    const unviewedCount = evidenceRegistry.filter(
+                        (e) =>
+                            e.category === category &&
+                            unlockedIds.includes(e.id) &&
+                            !viewedIds.includes(e.id),
+                    ).length;
+
+                    // Remove old badge if exists
+                    const oldBadge = tab.querySelector(".badge");
+                    if (oldBadge) oldBadge.remove();
+
+                    if (unviewedCount > 0) {
+                        const badge = document.createElement("span");
+                        badge.className = "badge";
+                        badge.innerText = unviewedCount;
+                        tab.appendChild(badge);
+                    }
+                });
+
                 if (currentTab === "Analysis") {
                     container.innerHTML = `
-                    <div class="analysis-box">
-                        <h3>CRYPTO-ANALYSIS TERMINAL</h3>
-                        <p style="font-size:0.8rem; color:var(--accent); margin-bottom:15px;">Input keywords to decrypt files</p>
-                        <input type="text" id="searchBar" placeholder="Search Database..." onkeypress="handleSearch(event)">
-                        <button onclick="processSearch()">EXECUTE SEARCH</button>
-                        <div id="search-feedback" style="
-                            margin-top: 20px;
-                            font-weight: bold;
-                            min-height: 24px;
-                            color: ${lastAnalysisFeedback.isSuccess ? "var(--success)" : "var(--danger)"};
-                            text-shadow: ${lastAnalysisFeedback.isSuccess ? "0 0 10px rgba(0,255,136,0.5)" : "0 0 10px rgba(255,77,77,0.5)"};
-                        ">
-                            ${lastAnalysisFeedback.text}
-                        </div>
-                    </div>
-                `;
+                        <div class="analysis-box">
+                            <h3>CRYPTO-ANALYSIS TERMINAL</h3>
+                            <p style="font-size:0.8rem; color:var(--accent); margin-bottom:15px;">Input keywords to decrypt files</p>
+                            <input type="text" id="searchBar" placeholder="Search Database..." onkeypress="handleSearch(event)">
+                            <button onclick="processSearch()">EXECUTE SEARCH</button>
+                            <div id="search-feedback" style="margin-top: 20px; font-weight: bold; color: ${lastAnalysisFeedback.isSuccess ? "var(--success)" : "var(--danger)"};">
+                                ${lastAnalysisFeedback.text}
+                            </div>
+                        </div>`;
                     return;
                 }
 
@@ -729,14 +981,17 @@
                 } else {
                     items.forEach((item) => {
                         const card = document.createElement("div");
-                        card.className = "evidence-card";
-                        card.innerHTML = renderEvidenceCard(item);
+                        // Add the 'new-item' class if not viewed
+                        const isNew = !viewedIds.includes(item.id);
+                        card.className = `evidence-card ${isNew ? "new-item" : ""}`;
+                        card.setAttribute("data-id", item.id);
+                        card.innerHTML = renderEvidenceCard(item, isNew);
                         container.appendChild(card);
                     });
                 }
             }
 
-            function renderEvidenceCard(item) {
+            function renderEvidenceCard(item, isNew) {
                 const contentHtml =
                     item.type === "markdown"
                         ? `<div class="md-content">${renderMarkdown(item.markdown || "")}</div>`
@@ -745,20 +1000,23 @@
                 const actions = [];
                 if (item.type === "pdf" && item.file) {
                     actions.push(
-                        `<a class="action-link" href="${item.file}" target="_blank" rel="noopener">OPEN IN NEW TAB</a>`,
+                        `<a class="action-link" href="${item.file}" target="_blank">OPEN IN NEW TAB</a>`,
                     );
                 }
 
-                // Changes: Added display:none to evidence-body and set icon to ▶
                 return `
-                <div class="evidence-header" data-id="${item.id}" onclick="toggleCard(this)">
-                    <div class="evidence-title"><span class="toggle-icon">▶</span> ${escapeHtml(item.title)}</div>
-                    <div class="evidence-actions" onclick="event.stopPropagation()">${actions.join("")}</div>
-                </div>
-                <div class="evidence-body" style="display: none; margin-top: 15px;">
-                    ${contentHtml}
-                </div>
-            `;
+                    <div class="evidence-header" data-id="${item.id}" onclick="toggleCard(this)">
+                        <div class="evidence-title">
+                            <span class="toggle-icon">▶</span>
+                            ${isNew ? '<span class="new-tag">[NEW]</span>' : ""}
+                            ${escapeHtml(item.title)}
+                        </div>
+                        <div class="evidence-actions" onclick="event.stopPropagation()">${actions.join("")}</div>
+                    </div>
+                    <div class="evidence-body" style="display: none; margin-top: 15px;">
+                        ${contentHtml}
+                    </div>
+                `;
             }
 
             function renderPdfViewer(item) {
@@ -841,6 +1099,21 @@
                     score += item.points || 0;
                     document.getElementById("points").innerText = score;
                 }
+            }
+
+            function unlockAndOpen(evidenceId) {
+                const item = evidenceRegistry.find((e) => e.id === evidenceId);
+                if (!item) return;
+
+                // 1. Unlock the item if it's not already
+                if (!unlockedIds.includes(evidenceId)) {
+                    unlockEvidence(item);
+                    // 2. Re-render the content so the new card exists in the DOM
+                    renderContent();
+                }
+
+                // 3. Use your existing logic to switch tabs and scroll to it
+                openPdfEvidence(evidenceId);
             }
 
             //function isKeywordMatch(input, target) {
@@ -957,6 +1230,10 @@
                             const id = target.substring("pdf:".length);
                             return `<a href="#" data-pdf-id="${escapeHtmlAttr(id)}">${text}</a>`;
                         }
+                        if (target.startsWith("unlock:")) {
+                            const id = target.substring("unlock:".length);
+                            return `<a href="#" data-unlock-id="${escapeHtmlAttr(id)}">${text}</a>`;
+                        }
                         return `<a href="${escapeHtmlAttr(target)}" target="_blank" rel="noopener">${text}</a>`;
                     },
                 );
@@ -1057,26 +1334,40 @@
                     event.preventDefault();
                     openPdfEvidence(pdfLink.getAttribute("data-pdf-id"));
                 }
+
+                const unlockLink = event.target.closest("[data-unlock-id]");
+                if (unlockLink) {
+                    event.preventDefault();
+                    unlockAndOpen(unlockLink.getAttribute("data-unlock-id"));
+                }
             });
 
             function toggleCard(headerElement) {
                 const body = headerElement.nextElementSibling;
+                const card = headerElement.closest(".evidence-card");
+                const evidenceId = headerElement.getAttribute("data-id");
                 const icon = headerElement.querySelector(".toggle-icon");
                 const iframe = body.querySelector("iframe");
 
                 if (body.style.display === "none") {
-                    // 1. Show the container first
                     body.style.display = "block";
                     icon.innerText = "▼";
 
-                    // 2. Load the PDF only if it hasn't been loaded yet
-                    // This solves the zoom issue and the rendering 'fail' cycle
+                    // Mark as viewed
+                    if (!viewedIds.includes(evidenceId)) {
+                        viewedIds.push(evidenceId);
+                        card.classList.remove("new-item");
+                        const newTag = headerElement.querySelector(".new-tag");
+                        if (newTag) newTag.remove();
+
+                        // Refresh tab badges immediately
+                        renderContent();
+                    }
+
                     if (iframe && iframe.src === "about:blank") {
-                        const realSrc = iframe.getAttribute("data-src");
-                        iframe.src = realSrc;
+                        iframe.src = iframe.getAttribute("data-src");
                     }
                 } else {
-                    // Collapse the card
                     body.style.display = "none";
                     icon.innerText = "▶";
                 }
